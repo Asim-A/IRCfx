@@ -27,7 +27,12 @@ javafx {
 }
 
 task(runServer, dependsOn: 'classes', type: JavaExec) {
-    main = 'me.challenges.server.server'
+    main = 'me.challenges.server.IRCServer'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task(runClient, dependsOn: 'classes', type: JavaExec) {
+    main = 'me.challenges.client.Client'
     classpath = sourceSets.main.runtimeClasspath
 }
 
