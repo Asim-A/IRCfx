@@ -32,6 +32,7 @@ public class IRCServer {
     private void handleConnection(){
         try(ServerSocket serverSocket = new ServerSocket(port)){
 
+            //noinspection InfiniteLoopStatement
             while(true){
                 System.out.println("### ACCEPTING CLIENT CONNECTION ###");
                 Socket clientSocket = serverSocket.accept();

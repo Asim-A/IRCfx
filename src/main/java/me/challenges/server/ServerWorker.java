@@ -18,12 +18,10 @@ public class ServerWorker implements Runnable{
 
     private void handleClient(Socket clientSocket) {
 
-
-
         try(PrintWriter outStream =
-                            new PrintWriter(
-                                    new BufferedWriter(
-                                            new OutputStreamWriter(clientSocket.getOutputStream())), true);
+                    new PrintWriter(
+                            new BufferedWriter(
+                                    new OutputStreamWriter(clientSocket.getOutputStream())), true);
             BufferedReader reader =
                     new BufferedReader(
                             new InputStreamReader(clientSocket.getInputStream()))
