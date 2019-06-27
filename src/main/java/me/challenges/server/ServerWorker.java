@@ -6,6 +6,7 @@ import java.net.Socket;
 public class ServerWorker implements Runnable{
 
     private final Socket clientSocket;
+    private Socket recipientSocket;
 
     public ServerWorker(Socket socket) {
         clientSocket = socket;
@@ -40,7 +41,6 @@ public class ServerWorker implements Runnable{
             outStream.println("SERVER HAS ENDED CONNECTION");
             clientSocket.close();
 
-
         }catch(InterruptedIOException ie){
             ie.printStackTrace();
             System.err.println("Interrupted IOException");
@@ -54,5 +54,19 @@ public class ServerWorker implements Runnable{
 
     }
 
+    private void establishConnection(String input){
 
+    }
+
+    private void parseMessage(){
+
+    }
+
+    public Socket getRecipientSocket() {
+        return recipientSocket;
+    }
+
+    public void setRecipientSocket(Socket recipientSocket) {
+        this.recipientSocket = recipientSocket;
+    }
 }

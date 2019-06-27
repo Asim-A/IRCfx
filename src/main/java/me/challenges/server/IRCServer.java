@@ -1,5 +1,7 @@
 package me.challenges.server;
 
+import me.challenges.server.state.ClientTracker;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -11,18 +13,23 @@ import java.util.concurrent.Executors;
 public class IRCServer {
 
     private final static int port = 8950;
+    public static ClientTracker clientTracker;
     private static IRCServer INSTANCE;
     private ExecutorService executorService;
 
     public static void main(String[] args) throws UnknownHostException {
         System.out.println("### ON ###");
         System.out.println(InetAddress.getLocalHost());
+
+
         IRCServer irc = IRCServer.getInstance();
+
         irc.handleConnection();
     }
 
     private IRCServer(){
         initThread();
+        clientTracker = ClientTracker.getInstance();
     }
 
     private void initThread(){
@@ -36,7 +43,12 @@ public class IRCServer {
             while(true){
                 System.out.println("### ACCEPTING CLIENT CONNECTION ###");
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("### ACCEPTED CLIENT ###");
+                System.out.println(
+                        "### (Client) CONNECTED [" +
+                         clientSocket.getInetAddress() +
+                                ":" +
+                                clientSocket.getPort() + "] ");
+
                 ServerWorker worker = new ServerWorker(clientSocket);
 
                 executorService.submit(worker);
