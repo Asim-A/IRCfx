@@ -5,6 +5,12 @@ import java.net.Socket;
 
 public class ServerWorker implements Runnable{
 
+    private PrintWriter clientSocketWriter;
+    private BufferedReader clientSocketReader;
+
+    private PrintWriter recipientSocketWriter;
+    private BufferedReader recipientSocketReader;
+
     private final Socket clientSocket;
     private Socket recipientSocket;
 
@@ -15,33 +21,38 @@ public class ServerWorker implements Runnable{
     @Override
     public void run() {
         handleClient(clientSocket);
+        
     }
 
     private void handleClient(Socket clientSocket) {
 
-        try(PrintWriter outStream =
+        try {
+            clientSocketWriter =
                     new PrintWriter(
                             new BufferedWriter(
                                     new OutputStreamWriter(clientSocket.getOutputStream())), true);
-            BufferedReader reader =
+
+            clientSocketReader =
                     new BufferedReader(
-                            new InputStreamReader(clientSocket.getInputStream()))
-        ) {
+                            new InputStreamReader(clientSocket.getInputStream()));
+
             String line;
 
-            while((line = reader.readLine()) != null){
+            while((line = clientSocketReader.readLine()) != null){
                 System.out.println(line);
 
                 if("QUIT".equalsIgnoreCase(line)) {
                     System.out.println("Client: " + clientSocket + " DISCONNECTED");
                     break;
                 }
-                outStream.println(line);
+                clientSocketWriter.println(line);
             }
-            outStream.println("SERVER HAS ENDED CONNECTION");
-            clientSocket.close();
+            clientSocketWriter.println("SERVER HAS ENDED CONNECTION");
 
-        }catch(InterruptedIOException ie){
+
+            closeAllResources();
+
+        } catch(InterruptedIOException ie){
             ie.printStackTrace();
             System.err.println("Interrupted IOException");
         }catch (IOException ioe){
@@ -54,11 +65,29 @@ public class ServerWorker implements Runnable{
 
     }
 
+    private void closeAllResources() throws IllegalStateException, IOException{
+        closeIOResources();
+        closeNetworkResources();
+    }
+
+    private void closeNetworkResources() throws IOException{
+        clientSocket.close();
+        recipientSocket.close();
+    }
+
+    private void closeIOResources() throws  InterruptedIOException,IOException{
+        clientSocketWriter.close();
+        clientSocketReader.close();
+
+        recipientSocketWriter.close();
+        recipientSocketReader.close();
+    }
+
     private void establishConnection(String input){
 
     }
 
-    private void parseMessage(){
+    private void parseMessage(String input, String check){
 
     }
 
