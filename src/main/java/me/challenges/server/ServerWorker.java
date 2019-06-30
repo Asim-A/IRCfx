@@ -1,5 +1,7 @@
 package me.challenges.server;
 
+import me.challenges.server.dataobjects.ChatMessageProto;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -11,17 +13,29 @@ public class ServerWorker implements Runnable{
     private PrintWriter recipientSocketWriter;
     private BufferedReader recipientSocketReader;
 
-    private final Socket clientSocket;
+    private Socket clientSocket;
     private Socket recipientSocket;
 
     public ServerWorker(Socket socket) {
         clientSocket = socket;
     }
 
+    public ServerWorker(){}
+
     @Override
     public void run() {
         handleClient(clientSocket);
-        
+
+    }
+
+    public ChatMessageProto.chatmessage makeMsg(){
+        ChatMessageProto.chatmessage.Builder message =
+                ChatMessageProto.chatmessage.newBuilder();
+
+        message.setHeader("nick");
+        message.setBody("Asim-A");
+
+        return message.build();
     }
 
     private void handleClient(Socket clientSocket) {
