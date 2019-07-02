@@ -1,5 +1,7 @@
 package me.challenges.server;
 
+import me.challenges.server.ServerWorkers.ProtoServerWorker;
+import me.challenges.server.ServerWorkers.ServerWorker;
 import me.challenges.server.state.ClientTracker;
 
 import java.io.IOException;
@@ -49,7 +51,8 @@ public class IRCServer {
                                 ":" +
                                 clientSocket.getPort() + "] ");
 
-                ServerWorker worker = new ServerWorker(clientSocket);
+                /*ServerWorker worker = new ServerWorker(clientSocket);*/
+                ProtoServerWorker worker = new ProtoServerWorker(clientSocket);
 
                 executorService.submit(worker);
             }

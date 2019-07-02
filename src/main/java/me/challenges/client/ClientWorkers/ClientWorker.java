@@ -1,4 +1,4 @@
-package me.challenges.client;
+package me.challenges.client.ClientWorkers;
 
 import java.io.BufferedReader;
 import java.io.IOException;
