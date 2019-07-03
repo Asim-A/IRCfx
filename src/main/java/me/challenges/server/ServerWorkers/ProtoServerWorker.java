@@ -8,14 +8,7 @@ import java.net.SocketException;
 
 public class ProtoServerWorker implements Runnable{
 
-    private BufferedOutputStream clientOut;
-    private BufferedInputStream clientIn;
-
-    private BufferedOutputStream reciepientOut;
-    private BufferedInputStream reciepientIn;
-
     private Socket clientSocket;
-    private Socket recipientSocket;
 
     public ProtoServerWorker(){}
 
@@ -31,8 +24,6 @@ public class ProtoServerWorker implements Runnable{
     private void handleConnection(){
 
         try {
-            clientOut = new BufferedOutputStream(clientSocket.getOutputStream());
-            clientIn = new BufferedInputStream(clientSocket.getInputStream());
 
             ChatMessageProto.chatmessage myMsg;
 
@@ -50,23 +41,19 @@ public class ProtoServerWorker implements Runnable{
                     break;
                 }
 
-                if(myMsg != null){
-                    myMsg.writeDelimitedTo(clientSocket.getOutputStream());
-                }
+                myMsg.writeDelimitedTo(clientSocket.getOutputStream());
 
 
             }
 
             System.out.println("WORKER CANCELLED");
 
-            clientIn.close();
-            clientOut.close();
             clientSocket.close();
 
 
         } catch (SocketException so){
             System.err.println("CLIENT CANCELED");
-        } catch(IOException | InterruptedException ioe){
+        } catch(InterruptedException | IOException ioe){
             ioe.printStackTrace();
         }
 
